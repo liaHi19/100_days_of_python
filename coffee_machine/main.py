@@ -3,7 +3,14 @@ money = 0
 is_on = True
 
 
-def process_coins(order, money):
+def make_coffee(order, resources):
+    drink_data = MENU[order]["ingredients"]
+    for resource in resources:
+        resources[resource] -= drink_data[resource]
+
+
+def process_coins(order, resources):
+    global money
     print("Please insert coins.")
     quarters = int(input("How many quarters?: ")) * 0.25
     dimes = int(input("How many dimes?: ")) * 0.10
@@ -19,10 +26,9 @@ def process_coins(order, money):
     else:
         change = round(sum_coins - drink_cost, 2)
         money += drink_cost
-        # make coffee
         print(f"Here is your change S{change}")
         print(f"Here is your {order}. Enjoy!")
-        return True
+        return make_coffee(order, resources)
 
 
 def check_ingredients(order, resources):
@@ -32,7 +38,7 @@ def check_ingredients(order, resources):
             print(f"Sorry there is not enough {resource}.")
             return False
         else:
-            return process_coins(order, money)
+            return process_coins(order, resources)
                 
 
 while is_on:
@@ -47,20 +53,16 @@ while is_on:
         is_on = False
     elif order == "report":
         for resource in resources:
-            ingredient = str(resources[resource]).title()
+            ingredient = str(resources[resource])
             if resource == "coffee":
                 ingredient += "g"
             else: 
                 ingredient += "ml"
-                print(f"{resource}: {ingredient}")
-            print(f"Money: ${money}")
+        print(f"{resource}: {ingredient}")
+        print(f"Money: ${money}")
     
     elif order == drink and drink != "":
         check_ingredients(order, resources)
     else:
         print("Please enter valid drink")
         is_on = False
-
-
-
-    
